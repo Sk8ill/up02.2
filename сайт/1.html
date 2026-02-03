@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система управления сервисными работами</title>
+    <link rel="stylesheet" href="1.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1>Система управления сервисными работами</h1>
+                <div class="role-selector">
+                    <div class="role-badge store-manager active" data-role="store-manager">Управляющий магазином</div>
+                    <div class="role-badge office-manager" data-role="office-manager">Управляющий офисом</div>
+                    <div class="role-badge hr-specialist" data-role="hr-specialist">Специалист HR</div>
+                </div>
+            </div>
+            <div class="header-info">
+                <div>Текущая роль: <span id="current-role">Управляющий магазином</span></div>
+                <div id="current-date">Дата: 02.02.2026</div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <h3>Навигация</h3>
+                <ul class="nav-list" id="nav-list">
+                    <!-- Навигация будет заполняться JavaScript в зависимости от роли -->
+                </ul>
+            </aside>
+
+            <main class="content">
+                <!-- Контент будет меняться в зависимости от выбранного раздела -->
+                <div id="store-manager-content">
+                    <div class="content-header">
+                        <h2>Мои задания</h2>
+                        <button class="btn btn-primary" id="create-task-btn">Создать задание</button>
+                    </div>
+                    
+                    <table class="tasks-table" id="store-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Наименование работ</th>
+                                <th>Даты выполнения</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Задания будут заполняться JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="office-manager-content" class="hidden">
+                    <div class="content-header">
+                        <h2>Задания от магазинов</h2>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="filter-tasks-btn">Фильтры</button>
+                        </div>
+                    </div>
+                    
+                    <table class="tasks-table" id="office-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Магазин</th>
+                                <th>Наименование работ</th>
+                                <th>Срок выполнения</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Задания будут заполняться JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="hr-specialist-content" class="hidden">
+                    <div class="content-header">
+                        <h2>Заявки на подбор персонала</h2>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="view-history-btn">История статусов</button>
+                        </div>
+                    </div>
+                    
+                    <table class="tasks-table" id="hr-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Магазин</th>
+                                <th>Наименование работ</th>
+                                <th>Требования</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Задания будут заполняться JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания задания -->
+    <div class="modal" id="create-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Создание задания на сервисные работы</h2>
+                <span class="close-modal" id="close-create-modal">&times;</span>
+            </div>
+            <form id="create-task-form">
+                <div class="form-group">
+                    <label for="task-name">Наименование работ *</label>
+                    <input type="text" id="task-name" required placeholder="Например: Замена освещения в торговом зале">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-date">Дата начала *</label>
+                        <input type="date" id="start-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-date">Дата окончания *</label>
+                        <input type="date" id="end-date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="task-description">Пожелания к исполнителям</label>
+                    <textarea id="task-description" placeholder="Опишите требования к специалистам, особые условия работы и т.д."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="task-priority">Приоритет</label>
+                    <select id="task-priority">
+                        <option value="normal">Обычный</option>
+                        <option value="high">Высокий</option>
+                        <option value="urgent">Срочный</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Создать задание</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-create-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования задания -->
+    <div class="modal" id="edit-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Редактирование задания</h2>
+                <span class="close-modal" id="close-edit-modal">&times;</span>
+            </div>
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id">
+                
+                <div class="form-group">
+                    <label for="edit-task-name">Наименование работ *</label>
+                    <input type="text" id="edit-task-name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-start-date">Дата начала *</label>
+                        <input type="date" id="edit-start-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-end-date">Дата окончания *</label>
+                        <input type="date" id="edit-end-date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-task-description">Пожелания к исполнителям</label>
+                    <textarea id="edit-task-description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-task-priority">Приоритет</label>
+                    <select id="edit-task-priority">
+                        <option value="normal">Обычный</option>
+                        <option value="high">Высокий</option>
+                        <option value="urgent">Срочный</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-edit-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно назначения специалистов -->
+    <div class="modal" id="assign-specialists-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Назначение специалистов на задание</h2>
+                <span class="close-modal" id="close-assign-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label>Фильтры для подбора:</label>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="text" id="specialist-search" placeholder="Поиск по имени или специализации" style="flex: 1;">
+                    <select id="availability-filter">
+                        <option value="all">Все специалисты</option>
+                        <option value="available">Доступные</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="specialists-list" class="specialist-grid">
+                <!-- Список специалистов будет заполняться JavaScript -->
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <button class="btn btn-success" id="confirm-assignment-btn">Назначить выбранных специалистов</button>
+                <button class="btn btn-secondary" id="request-hr-btn">Создать заявку в HR</button>
+                <button class="btn btn-secondary" id="cancel-assign-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно истории статусов -->
+    <div class="modal" id="status-history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>История статусов задания #<span id="history-task-id"></span></h2>
+                <span class="close-modal" id="close-history-modal">&times;</span>
+            </div>
+            
+            <div class="timeline" id="status-history-timeline">
+                <!-- История будет заполняться JavaScript -->
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <button class="btn btn-secondary" id="close-history-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="1.js"></script>
+</body>
+</html>
