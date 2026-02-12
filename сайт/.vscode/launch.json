@@ -4,11 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        
         {
             "type": "msedge",
             "request": "launch",
             "name": "Open 1.html",
-            "file": "c:\\Users\\Artem\\Desktop\\сайт\\1.html"
+            "file": "C:\Users\OUIT327\Desktop\up02.2\сайт\1.html"
         }
     ]
 }
